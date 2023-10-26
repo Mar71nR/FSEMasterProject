@@ -1,0 +1,108 @@
+// Click and Drag an object
+
+
+//CIRCLE
+a = 75;
+b = 250;
+diameter = 100;
+
+
+var draggingcircle = false;
+var rollovercircle = false;
+var offsetA, offsetB;
+
+var dragging = false; // Is the object being dragged?
+var rollover = false; // Is the mouse over the ellipse?
+
+var x, y, w, h;          // Location and size
+var offsetX, offsetY;    // Mouseclick offset
+
+function setup() {
+  createCanvas(500, 500);
+  
+  //Starting location
+  x = 25;
+  y = 25;
+  // Dimensions
+  w = 100;
+  h = 100;
+}
+
+function setLineDash(list) {//Dashed lines
+  drawingContext.setLineDash(list);
+}
+function draw() {     //DRAW FUNCTION
+  background(255);
+  
+  setLineDash([5,5]);
+  fill(255)
+  square(300,25,100) // put target square
+  circle(350, 250, 100) //put target circle
+  triangle(350, 350, 300, 450, 400, 450) //put target triangle
+  
+  
+  
+  // Is mouse over SQUARE
+  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+    rollover = true;
+  } 
+  else {
+    rollover = false;
+  }
+  
+  // Adjust location if being dragged
+  if (dragging) {
+    x = mouseX + offsetX;
+    y = mouseY + offsetY;
+  }
+  //CIRCLE
+ if (mouseX > a && mouseX < a + diameter && mouseY > b && mouseY < b + diameter) {
+    rollovercircle = true;
+  } 
+  else {
+    rollovercircle = false;
+  }
+  if (draggingcircle){
+    a = mouseX 
+    b= mouseY
+  }
+
+  stroke(0);
+  // Different fill based on state
+  if (dragging || draggingcircle) {
+    fill (50);
+  } 
+  else if (rollover || rollovercircle) {
+    fill(100);
+  } 
+  else if ((x > 300) && (x < 305)){
+    if((y > 20) && (y < 28)){
+      fill('green');
+    }
+  }
+    else{
+      fill(175,200);
+    }
+  rect(x, y, w, h);
+ ellipse(a,b,diameter,diameter)
+}
+
+function mousePressed() {
+  // Did I click on the rectangle?
+  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+    dragging = true;
+  
+  offsetX = x-mouseX;
+   offsetY = y-mouseY;
+  }
+  else if (dist(a, b, mouseX, mouseY) < diameter/2){ //CIRCLE
+    draggingcircle = true;
+  }
+  
+}
+
+function mouseReleased() {
+  // Quit dragging
+  dragging = false;
+  draggingcircle = false;
+}
