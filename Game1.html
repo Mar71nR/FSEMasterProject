@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+    
+    
+    
+  </head>
+  <body>
+    <main>   
+    </main>
+    <canvas id="myCanvas">
+        <script>
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+// TRIANGLE
+var x1,y1,x2,y2,x3,y3;
+var draggingtri = false;
+var rollovertri = false
+var offsetX1, offsetY1
+// STARTING SQUARE VARIABLES
+var xx = 620, yy = 50, ww = 100
+
+//CIRCLE STARTING LOCATION, DIMENSIONS, FUNCTIONS
+a = 100;
+b = 275;
+diameter = 100;
+
+
+var draggingcircle = false;
+var rollovercircle = false;
+var offsetA, offsetB;
+
+var dragging = false; // Is the object being dragged?
+var rollover = false; // Is the mouse over the ellipse?
+
+var x, y, w, h;          // Location and size
+var offsetX, offsetY;    // Mouseclick offset
+
+var a1 = 670, b1 = 275
+var xx1 = 670, yy1 = 375, xx2 = 620, yy2 = 475, xx3 = 720, yy3 = 475;
+function setup() {
+  createCanvas(800, 550);
+//TRIANGLE STARTING LOCATION 
+x1 = 100;
+y1 = 375;
+x2 = 50
+y2 = 475
+x3 = 150;
+y3 = 475;  
+  
+//SQUARE STARTING LOCATION
+x = 50;
+y = 50;
+//SQUARE DIMENSIONS
+w = 100;
+h = 100;
+
+}
+
+//SET DASHED LINE FUNCTION
+function setLineDash(list) {//Dashed lines
+  drawingContext.setLineDash(list);
+}
+
+//DRAW FUNCTION
+function draw() {
+  background('#3c99dc',);
+  setLineDash([5,5]);
+  fill(255)
+  square(xx,yy,ww) // put target square
+  circle(a1, b1, 100) //put target circle
+  triangle(xx1, yy1, xx2, yy2, xx3, yy3) //put target triangle
+  
+  
+  
+  // Is mouse over SQUARE
+  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+    rollover = true;
+  } 
+  else {
+    rollover = false;
+  }
+  
+  // Adjust location if being dragged
+  if (dragging) {
+    x = mouseX + offsetX;
+    y = mouseY + offsetY;
+  }
+  //CIRCLE
+   if ((mouseX > a && mouseX < a + diameter/2 && mouseY > b && mouseY < b + diameter/2) || (mouseX < a && mouseX > a - diameter/2 && mouseY < b && mouseY > b-50) || (mouseX > a && mouseX < a + diameter/2 && mouseY < b && mouseY > b - diameter/2) || (mouseX < a && mouseX > a - diameter/2 && mouseY > b && mouseY < b + diameter/2) ) {
+    rollovercircle = true;
+  } 
+  else {
+    rollovercircle = false;
+  }
+  if (draggingcircle){
+    a = mouseX + offsetA
+    b= mouseY + offsetB
+  }
+  //TRIANGLE
+    if (mouseInTriangle(x1, y1, x2, y2, x3, y3)) {
+    rollovertri = true;
+  } 
+  else {
+    rollovertri = false;
+  }
+  if(draggingtri){
+x1 = mouseX + offsetX1
+y1 = mouseY + offsetY1
+x2 = mouseX - 50 + offsetX1
+y2 = mouseY + 100 + offsetY1
+x3 = mouseX + 50 + offsetX1
+y3 = mouseY + 100 + offsetY1
+}
+
+  stroke(0);
+  // Different fill based on state
+  if (dragging) {
+    fill (139,0,0);
+  } 
+  else if (rollover) {
+    fill(139,0,0);
+  } 
+  else if ((x > xx - 5) && (x < xx + 5) && (y > yy - 5) && (y < yy + 3)){
+      fill('green');
+  }
+    else{
+      fill('red');
+    }
+rect(x, y, w, h);
+  //COLOR FOR CIRCLE
+  if(draggingcircle){
+    fill(139,0,0);
+  }
+  else if(rollovercircle){
+    fill(139,0,0);
+  }
+  else if(((a > a1 - 5) && (a < a1 + 5)) && ((b > b1 - 5) && b < b1 + 5)){
+    fill('green')
+  }
+  else{
+    fill('red')
+  }
+ ellipse(a,b,diameter,diameter)
+  //COLOR CHANGE FOR TRIANGLE
+  if(mouseInTriangle(x1, y1, x2, y2, x3, y3)){
+    fill(139,0,0)
+  }
+  else if(draggingtri){
+    fill(139,0,0)
+  }
+  else if(((x1 > xx1 -3 ) && (x1 < xx1 + 3)) && ((y1 > yy1 - 3) && (y1 < yy1 + 3))) {
+    fill('green')
+  }
+  else{
+    fill('red')
+  }
+  
+ triangle(x1,y1,x2,y2,x3,y3)
+}
+//START OF TRIANGLE FUNCTIONS
+function Area(i, j, k) {
+    return abs((i[0]*(j[1]-k[1]) + j[0]*(k[1]-i[1])+ k[0]*(i[1]-j[1]))/2);
+}
+
+function mouseInTriangle(x1, y1, x2, y2, x3, y3){
+    let point = [mouseX, mouseY];
+    let area = Area([x1, y1], [x2, y2], [x3, y3]);
+    let area1 = Area([x1, y1], [x2, y2], point);
+    let area2 = Area(point, [x2, y2], [x3, y3]);
+    let area3 = Area([x1, y1], point, [x3, y3]);
+    return abs(area1 + area2 + area3 - area) < 0.001;
+}
+//END OF TRAINGLE FUNCTIONS
+
+//MOUSE FUNCTIONS
+function mousePressed() {
+  //RECTANGLE
+  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+    dragging = true;
+  
+  offsetX = x-mouseX;
+   offsetY = y-mouseY;
+  }
+  //CIRCLE
+  else if (dist(a, b, mouseX, mouseY) < diameter/2){
+    draggingcircle = true;
+    offsetA = a - mouseX
+    offsetB = b - mouseY
+  }
+ //TRIANGLE
+  else if (mouseInTriangle(x1, y1, x2, y2, x3, y3)) { 
+    draggingtri = true;
+    offsetX1 = x1-mouseX;
+   offsetY1 = y1-mouseY;
+  }
+  
+}
+
+function mouseReleased() {
+  // Quit dragging
+  dragging = false;
+  if ((x > xx -5) && (x < xx +5) && (y > yy - 5) && (y < yy + 3)){
+    x = xx; 
+    y = yy;
+  }
+  draggingcircle = false;
+  if(((a > a1 - 5) && (a < a1 + 5)) && ((b > b1 - 5) && b < b1 + 5)){
+    a = a1;
+    b = b1;
+  }
+  draggingtri = false;
+  if(((x1 > xx1 - 3) && (x1 < xx1 + 3)) && ((y1 > yy1 - 3) && (y1 < yy1 + 3))) {
+    x1 = xx1;
+    y1 = yy1;
+    x2 = xx2;
+    y2 = yy2;
+    x3 = xx3;
+    y3 = yy3;
+  }
+}
+    </script>
+      </canvas>
+  </body>
+</html>
