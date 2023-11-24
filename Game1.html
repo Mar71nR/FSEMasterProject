@@ -1,39 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
+}
 
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-      }
-      canvas {
-        display: block;
-      }
-    </style>
-    
-    
-    
+.top {
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  text-align: center;
+  font-size: 35px;
+  line-height:60px;
+  border: 3px solid black;
+}
+
+.bottom {
+  display: grid;
+  place-items: center; 
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  border: 3px solid black;
+}
+
+.menu {
+  display: inline-block;
+  text-decoration: none;
+  color: black;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  font-size: 20px;
+  background: violet;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 10px 27px;
+}
+
+.menu:hover {
+  background: purple;
+}
+</style>
+
   </head>
   <body>
-    <main>   
+    <main>
+      <div class="top">Drag and Drop Game</div>
     </main>
-    <canvas id="myCanvas">
-        <script>
-var canvas = document.getElementById("myCanvas");
+      <canvas id="myCanvas"></canvas>
+    <div class="bottom">
+      <a class="menu" href="index.html">Menu</a> 
+   </div>
+    
+    <script src="sketch.js"></script>
+    
+    <script>
+      var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+
+//TIMER
+var timerValue = 0;
+var interval;
+var timerVal2 = 0;
+//SOUNDS
+var correctSound;
+var allcorrect;
 
 // TRIANGLE
 var x1,y1,x2,y2,x3,y3;
 var draggingtri = false;
-var rollovertri = false
-var offsetX1, offsetY1
+var rollovertri = false;
+var offsetX1, offsetY1;
 // STARTING SQUARE VARIABLES
-var xx = 620, yy = 50, ww = 100
+var xx = 620, yy = 50, ww = 100;
 
 //CIRCLE STARTING LOCATION, DIMENSIONS, FUNCTIONS
 a = 100;
@@ -51,15 +110,27 @@ var rollover = false; // Is the mouse over the ellipse?
 var x, y, w, h;          // Location and size
 var offsetX, offsetY;    // Mouseclick offset
 
-var a1 = 670, b1 = 275
+var a1 = 670, b1 = 275;
 var xx1 = 670, yy1 = 375, xx2 = 620, yy2 = 475, xx3 = 720, yy3 = 475;
+
+//STATE OF FINISHED
+var complete = false;
+//BUTTONS
+var retryButton;
+var resetButton;
+
+var done, done2,done3,done4,done5;
+
+var fastest = 10000000000000000000000;
+var fastest2 = 10000000000000000000000;
+
 function setup() {
   createCanvas(800, 550);
 //TRIANGLE STARTING LOCATION 
 x1 = 100;
 y1 = 375;
-x2 = 50
-y2 = 475
+x2 = 50;
+y2 = 475;
 x3 = 150;
 y3 = 475;  
   
@@ -70,26 +141,61 @@ y = 50;
 w = 100;
 h = 100;
 
+  resetButton = createButton('Reset');
+  resetButton.position(720,75);
+  resetButton.size(70,30);
+  resetButton.style('font-size','15px');
+  resetButton.mousePressed(reset2);
 }
 
-//SET DASHED LINE FUNCTION
-function setLineDash(list) {//Dashed lines
-  drawingContext.setLineDash(list);
-}
 
 //DRAW FUNCTION
 function draw() {
-  background('#3c99dc',);
-  setLineDash([5,5]);
-  fill(255)
-  square(xx,yy,ww) // put target square
-  circle(a1, b1, 100) //put target circle
-  triangle(xx1, yy1, xx2, yy2, xx3, yy3) //put target triangle
+  background('#3c99dc');  
+drawingContext.setLineDash([]);  
+  fill('black');
+  textFont('Arial',30);
+  text('Time: ' +timerVal2 + '.'+        timerValue,620,530); 
+  //WHEN COMPLETE
+    if(complete == true){
+    fill('white');
+  drawingContext.setLineDash([]);
+    if(timerVal2 < fastest2){
+      fastest2 = timerVal2;
+      fastest = timerValue;
+       }
+    if(timerVal2 == fastest2){
+     if(timerValue < fastest){
+       fastest = timerValue;
+     } 
+    }
+    rect(275,100,250,300);
+    fill('black');
+    clearInterval(interval);
+    fill('green');
+    text('Complete!!',330,150);
+    fill('black');
+    text('Time:',290,220);
+    text(timerVal2 + '.' + timerValue + 's', 445,220);
+  text('Fastest:',290,290);
+    text(fastest2 + '.' + fastest + 's', 445,290);
+  retry();
+  retryButton.show();
+  dragging = false;
+  draggingtri = false;
+  draggingcircle = false;
+    }
+else{
+  drawingContext.setLineDash([5,5]);
+} 
+  fill(255);  
+  square(xx,yy,ww); // put target square
+  circle(a1, b1, 100); //put target circle
+  triangle(xx1, yy1, xx2, yy2, xx3, yy3); //put target triangle
   
-  
-  
+ 
   // Is mouse over SQUARE
-  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+  if ((mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) && complete == false) {
     rollover = true;
   } 
   else {
@@ -102,7 +208,7 @@ function draw() {
     y = mouseY + offsetY;
   }
   //CIRCLE
-   if ((mouseX > a && mouseX < a + diameter/2 && mouseY > b && mouseY < b + diameter/2) || (mouseX < a && mouseX > a - diameter/2 && mouseY < b && mouseY > b-50) || (mouseX > a && mouseX < a + diameter/2 && mouseY < b && mouseY > b - diameter/2) || (mouseX < a && mouseX > a - diameter/2 && mouseY > b && mouseY < b + diameter/2) ) {
+   if (((mouseX > a && mouseX < a + diameter/2 && mouseY > b && mouseY < b + diameter/2) || (mouseX < a && mouseX > a - diameter/2 && mouseY < b && mouseY > b-50) || (mouseX > a && mouseX < a + diameter/2 && mouseY < b && mouseY > b - diameter/2) || (mouseX < a && mouseX > a - diameter/2 && mouseY > b && mouseY < b + diameter/2) ) && complete == false) {
     rollovercircle = true;
   } 
   else {
@@ -113,19 +219,19 @@ function draw() {
     b= mouseY + offsetB
   }
   //TRIANGLE
-    if (mouseInTriangle(x1, y1, x2, y2, x3, y3)) {
+    if (mouseInTriangle(x1, y1, x2, y2, x3, y3) && complete == false) {
     rollovertri = true;
   } 
   else {
     rollovertri = false;
   }
   if(draggingtri){
-x1 = mouseX + offsetX1
-y1 = mouseY + offsetY1
-x2 = mouseX - 50 + offsetX1
-y2 = mouseY + 100 + offsetY1
-x3 = mouseX + 50 + offsetX1
-y3 = mouseY + 100 + offsetY1
+x1 = mouseX + offsetX1;
+y1 = mouseY + offsetY1;
+x2 = mouseX - 50 + offsetX1;
+y2 = mouseY + 100 + offsetY1;
+x3 = mouseX + 50 + offsetX1;
+y3 = mouseY + 100 + offsetY1;
 }
 
   stroke(0);
@@ -151,27 +257,30 @@ rect(x, y, w, h);
     fill(139,0,0);
   }
   else if(((a > a1 - 5) && (a < a1 + 5)) && ((b > b1 - 5) && b < b1 + 5)){
-    fill('green')
+    fill('green');
   }
   else{
-    fill('red')
+    fill('red');
   }
  ellipse(a,b,diameter,diameter)
   //COLOR CHANGE FOR TRIANGLE
-  if(mouseInTriangle(x1, y1, x2, y2, x3, y3)){
-    fill(139,0,0)
+  if(mouseInTriangle(x1, y1, x2, y2, x3, y3) && complete == false){
+    fill(139,0,0);
   }
   else if(draggingtri){
-    fill(139,0,0)
+    fill(139,0,0);
   }
   else if(((x1 > xx1 -3 ) && (x1 < xx1 + 3)) && ((y1 > yy1 - 3) && (y1 < yy1 + 3))) {
-    fill('green')
+    fill('green');
   }
   else{
-    fill('red')
+    fill('red');
   }
   
- triangle(x1,y1,x2,y2,x3,y3)
+ triangle(x1,y1,x2,y2,x3,y3);
+
+//BEGIN TIMER
+beginTimer();
 }
 //START OF TRIANGLE FUNCTIONS
 function Area(i, j, k) {
@@ -198,13 +307,13 @@ function mousePressed() {
    offsetY = y-mouseY;
   }
   //CIRCLE
-  else if (dist(a, b, mouseX, mouseY) < diameter/2){
+  else if ((dist(a, b, mouseX, mouseY) < diameter/2)){
     draggingcircle = true;
-    offsetA = a - mouseX
-    offsetB = b - mouseY
+    offsetA = a - mouseX;
+    offsetB = b - mouseY;
   }
  //TRIANGLE
-  else if (mouseInTriangle(x1, y1, x2, y2, x3, y3)) { 
+  else if ((mouseInTriangle(x1, y1, x2, y2, x3, y3))) { 
     draggingtri = true;
     offsetX1 = x1-mouseX;
    offsetY1 = y1-mouseY;
@@ -218,23 +327,171 @@ function mouseReleased() {
   if ((x > xx -5) && (x < xx +5) && (y > yy - 5) && (y < yy + 3)){
     x = xx; 
     y = yy;
+    playSounds();
   }
   draggingcircle = false;
   if(((a > a1 - 5) && (a < a1 + 5)) && ((b > b1 - 5) && b < b1 + 5)){
     a = a1;
     b = b1;
+    playSoundsCircle();
   }
   draggingtri = false;
-  if(((x1 > xx1 - 3) && (x1 < xx1 + 3)) && ((y1 > yy1 - 3) && (y1 < yy1 + 3))) {
+  if(((x1 > xx1 - 5) && (x1 < xx1 + 5)) && ((y1 > yy1 - 5) && (y1 < yy1 + 5))) {
     x1 = xx1;
     y1 = yy1;
     x2 = xx2;
     y2 = yy2;
     x3 = xx3;
     y3 = yy3;
+  playSoundsTri();
+  }
+  
+  if(x==xx && y ==yy && a == a1 && b==b1 && x1 == xx1 && y1 ==yy1 && x2 == xx2 && y2 ==yy2 && x3 == xx3 && y3 ==yy3){
+   completed();
+    complete = true;
   }
 }
+
+let playSounds= (function (){
+ done = false;
+  return function () {
+    if (!done){
+      done = true;
+      correctSound.play();
+    }
+  }
+})();
+
+let playSoundsCircle= (function (){
+ done2 = false;
+  return function () {
+    if (!done2){
+      done2 = true;
+      correctSound.play();
+    }
+  }
+})();
+
+let playSoundsTri= (function (){
+ done3 = false;
+  return function () {
+    if (!done3){
+      done3 = true;
+      correctSound.play();
+    }
+  }
+})();
+
+let completed = (function (){
+ done4 = false;
+  return function () {
+    if (!done4){
+      done4 = true;
+      allcorrect.play();
+    }
+  }
+})();
+
+let retry = (function() {
+  let done = false;
+  return function () {
+        if (!done) {
+            done = true;
+          retryButton = createButton('Retry');
+          retryButton.position(340,400);
+          retryButton.size(125,50);
+          retryButton.style('font-size','30px');
+            retryButton.style('background-color','green');
+          retryButton.style('color','white');
+          retryButton.mousePressed(reset);
+        }
+  }
+})();
+
+function reset(){
+complete = false;
+x = 50;
+y = 50;
+
+x1 = 100;
+y1 = 375;
+x2 = 50
+y2 = 475
+x3 = 150;
+y3 = 475;
+  
+a = 100;
+b = 275;
+
+timerValue = 0;
+timerVal2 = 0;
+done = false;
+done2 = false;
+done3 = false;
+done4 = false;
+done5 = false;
+retryButton.hide();
+
+}
+function reset2(){
+clearInterval(interval);
+  if(complete == true){
+   retryButton.hide();  
+     }
+  complete = false;
+x = 50;
+y = 50;
+
+x1 = 100;
+y1 = 375;
+x2 = 50
+y2 = 475
+x3 = 150;
+y3 = 475;
+  
+a = 100;
+b = 275;
+
+timerValue = 0;
+timerVal2 = 0;
+done = false;
+done2 = false;
+done3 = false;
+done4 = false;
+done5 = false;
+}
+
+let timerCount = (function() {
+  done5 = false;
+    return function () {
+        if (!done5) {
+            done5 = true;
+    interval = setInterval(function() {
+    if (timerValue >= 0) {
+      timerValue++;
+    if(timerValue == 10){
+      timerVal2++;
+      timerValue = 0;
+    }
+    }
+  }, 100);
+        }
+    };
+})();
+
+function beginTimer(){
+  if(mouseIsPressed == true){
+    if (rollover == true || rollovercircle == true || rollovertri == true){
+     timerCount();  
+       }
+  }
+}
+
+function preload(){
+  correctSound = loadSound('dragCorrect.mp3');
+  allcorrect = loadSound('allComplete.mp3');
+}
     </script>
-      </canvas>
+    
   </body>
 </html>
