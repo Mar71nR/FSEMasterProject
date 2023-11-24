@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <script src="p5.sound.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
+}
+
+.top {
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  text-align: center;
+  font-size: 35px;
+  line-height:60px;
+  border: 3px solid black;
+}
+
+.bottom {
+  display: grid;
+  place-items: center; 
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  border: 3px solid black;
+}
+
+.menu {
+  display: inline-block;
+  text-decoration: none;
+  color: black;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  font-size: 20px;
+  background: violet;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 10px 27px;
+}
+
+.menu:hover {
+  background: purple;
+}
+</style>
+
+  </head>
+  <body>
+    <main>
+      <div class="top">Typing Game</div>
+    </main>
+      <canvas id="myCanvas"></canvas>
+    <div class="bottom">
+      <a class="menu" href="index.html">Menu</a> 
+   </div>
+    
+    <script src="sketch.js"></script>
+    
+    <script>
+      var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+//AUDIO
+var correctSound;
+var incorrectSound;
+
+var timerValue = 60;
+var inp;
+var words = ['apple', 'bear', 'cat', 'dog','hello','word','answer','guarded','story','immense','correct','half','country','state','divergent','instrument','mouse','road','line','cool','ball','pocket','island','rob','least','wrong','bye','basket','soccer','boat','play','type','second','first','last','jump','bottle','clock','wave','clean','fast','slow','current','past','future','write','wear','shoes','clothes','food','restaurant','building','balcony','door','table','chair','plate','cup','glass','toothbrush','shelf','amazing','great','good','bad','water','river','ocean','beach','forest','rain','sun','swamp','desert','mountain','rock','tree','plant','flower','leaves','animal','person','cloud','color','excellent','quotes','quality','zebra'];
+
+
+var wordToType;
+var result;
+
+var score = 0;
+var highScore = 0;
+
+//BUTTON VARIABLES
+var resetButton;
+var nextButton;
+var submitbutton;
+var resetButton2;
+//ONE TIME EXECUTION FUNCTIONS
+var done;
+//INTERVAL FUNCTIONS
+var interval;
+var done;
+//INCORRECT MESSAGE
+var message;
+
+function setup() {
+  createCanvas(800, 500);
+  background('#3c99dc');
+  
+  wordToType = random(words);
+  
+  //INPUT FUNCTIONS
+  inp = createInput('');
+  inp.position(290,250);
+  inp.size(200,150);
+  inp.style('font-size', '30px');
+  inp.style('text-align',CENTER);
+  inp.input(inputEvent);
+  
+  //BUTTONS
+  nextButton = createButton('New Word');
+  nextButton.position(510,310);
+  nextButton.size(100,50);
+  nextButton.mousePressed(changeword);
+  nextButton.style('font-size','18px');
+  nextButton.style('background-color','grey');
+  nextButton.style('color','white');
+  
+    resetButton2 = createButton('Reset');
+  resetButton2.position(670,100);
+  resetButton2.mousePressed(resetAll2);
+  resetButton2.size(100,50);
+  resetButton2.style('font-size','20px');
+  
+  submitbutton = createButton('Submit');
+  submitbutton.position(345,420);
+  submitbutton.size(100,50);
+  submitbutton.style('background-color','green');
+  submitbutton.mousePressed(submit);
+  submitbutton.style('font-size','20px');
+  submitbutton.style('color','white');
+  
+  
+}
+
+function draw() {
+background('#3c99dc');
+  fill('black');
+  textSize(45);
+  text(score,200,80);
+  //MAKE MESSAGE RED
+    if(message == 'Incorrect!'){
+    textSize(30);
+    fill('red');
+    text(message,390,220);
+  }
+  textSize(45);
+  text(wordToType,390,150);
+  //DISPLAY SCORES AND TIME
+  fill('black');
+  text("Score: ",100,80);
+  textAlign(CENTER);
+  text('Time:', 85,130);
+  text(timerValue,200,130);
+
+//WHEN TIMER ENDS  
+  if(timerValue == 0){
+   fill('white');
+    rect(275,100,250,300);
+   reset();
+   resetButton.show();
+   inp.hide();
+  fill('black');
+    textSize(30);
+  text('Score:',325,150);
+  text(score,490,150);
+  submitbutton.hide();
+  nextButton.hide();
+    if(score > highScore){
+    highScore = score;
+  }
+  text('High Score:', 360,220);
+  text(highScore,490,220);
+}
+
+}
+
+//COLLECT USER INPUT
+function inputEvent(){
+  result = inp.value();
+}
+//WHEN RETURN AND ENTER
+function keyPressed(){
+  if(keyCode == ENTER || keyCode == RETURN){
+     if(result == wordToType){
+       score ++;
+       correctSound.play();
+       changeword();
+     }
+     else{
+       message = 'Incorrect!';
+       incorrectSound.play();
+     }
+  
+  }
+}
+//RUN TIMER
+function keyTyped(){
+  if(timerValue == 60){
+  timerCountdown();
+    }
+}
+//WHEN TO CHANGE WORD
+function changeword(){
+  if(wordToType == ''){
+    words = ['apple', 'bear', 'cat', 'dog','hello','word','answer','guarded','story','immense','correct','half','country','state','divergent','instrument','mouse','road','line','cool','ball','pocket','island','rob','least','wrong','bye','basket','soccer','boat','play','type','second','first','last','jump','bottle','clock','wave','clean','fast','slow','current','past','future','write','wear','shoes','clothes','food','restaurant','building','balcony','door','table','chair','plate','cup','glass','toothbrush','shelf','amazing','great','good','bad','water','river','ocean','beach','forest','rain','sun','swamp','desert','mountain','rock','tree','plant','flower','leaves','animal','person','cloud','color','excellent','quotes','quality','zebra'];
+  }
+  wordToType = random(words);
+  message = '';
+  inp.value('');
+  words.splice(words.indexOf(wordToType),1);
+  }
+
+//RUN TIMER ONLY ONCE
+let timerCountdown = (function() {
+  done = false;
+    return function () {
+        if (!done) {
+            done = true;
+    interval = setInterval(function() {
+    if (timerValue > 0 && timerValue <= 60) {
+      timerValue--;
+    }
+  }, 1000);
+        }
+    };
+})();
+
+
+//CREATE RESET BUTTON
+let reset = (function() {
+  let done = false;
+  return function () {
+        if (!done) {
+            done = true;
+          resetButton = createButton('Retry');
+          resetButton.position(340,375);
+          resetButton.size(125,50);
+          resetButton.style('font-size','30px');
+            resetButton.style('background-color','green');
+          resetButton.style('color','white');
+            //BUTTONS
+  resetButton.mousePressed(resetAll);
+        }
+  }
+})();
+//BOTH RESET BUTTONS
+function resetAll(){
+score = 0;
+timerValue = 60;
+clearInterval(interval);
+resetButton.hide();
+inp.value('');
+done = false;
+inp.show();
+submitbutton.show();
+nextButton.show();
+words = ['apple', 'bear', 'cat', 'dog','hello','word','answer','guarded','story','immense','correct','half','country','state','divergent','instrument','mouse','road','line','cool','ball','pocket','island','rob','least','wrong','bye','basket','soccer','boat','play','type','second','first','last','jump','bottle','clock','wave','clean','fast','slow','current','past','future','write','wear','shoes','clothes','food','restaurant','building','balcony','door','table','chair','plate','cup','glass','toothbrush','shelf','amazing','great','good','bad','water','river','ocean','beach','forest','rain','sun','swamp','desert','mountain','rock','tree','plant','flower','leaves','animal','person','cloud','color','excellent','quotes','quality','zebra'];
+changeword();
+}
+
+function resetAll2(){
+if(timerValue == 0){
+   resetButton.hide();
+   }
+  score = 0;
+timerValue = 60;
+clearInterval(interval);
+inp.value('');
+done = false;
+inp.show();
+submitbutton.show();
+nextButton.show();
+words = ['apple', 'bear', 'cat', 'dog','hello','word','answer','guarded','story','immense','correct','half','country','state','divergent','instrument','mouse','road','line','cool','ball','pocket','island','rob','least','wrong','bye','basket','soccer','boat','play','type','second','first','last','jump','bottle','clock','wave','clean','fast','slow','current','past','future','write','wear','shoes','clothes','food','restaurant','building','balcony','door','table','chair','plate','cup','glass','toothbrush','shelf','amazing','great','good','bad','water','river','ocean','beach','forest','rain','sun','swamp','desert','mountain','rock','tree','plant','flower','leaves','animal','person','cloud','color','excellent','quotes','quality','zebra'];
+changeword();
+}
+
+//SUBMIT BUTTON
+function submit(){
+  if(result == wordToType){
+       score ++;
+    correctSound.play();   
+    changeword();
+     }
+     else{
+       message = 'Incorrect!';
+       incorrectSound.play();
+     }
+}
+
+function preload(){
+  correctSound = loadSound("correct.mp3");
+  incorrectSound = loadSound('Incorrect.mp3');
+}      
+    </script>
+    
+  </body>
+</html>
