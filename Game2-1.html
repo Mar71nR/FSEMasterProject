@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
+}
+
+.top {
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  text-align: center;
+  font-size: 35px;
+  line-height:60px;
+  border: 3px solid black;
+}
+
+.bottom {
+  display: grid;
+  justify-content: center;
+  align-content: center; 
+  grid-template-columns: repeat(3,115px);
+  grid-gap: 170px;
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  border: 3px solid black;
+}
+
+.menu,.next {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  font-size: 20px;
+  background: violet;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 10px 25px;
+}
+
+.menu:hover,.next:hover {
+  background: purple;
+}
+</style>
+
+  </head>
+  <body>
+    <main>
+      <div class="top">Tracing Game</div>
+    </main>
+      <canvas id="myCanvas"></canvas>
+    <div class="bottom">
+      <div></div>
+      <a class="menu" href="index.html">Menu</a> 
+      <a class="next" href="Game2-2.html">Next</a>
+   </div>
+    
+    <script src="sketch.js"></script>
+    
+    <script>
+      var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+//HELLO VARIABLES <START HERE>
+//E VARIABLES
+var ea = 350,eb = 260,ec =130,ed = 147;
+var ee1 = 350,ef1 = 260,eg1 = 75,eh1 = 97;
+var ex = 315, ey = 267, ew = 93, eh = 15;
+var ex1 = 310, ey1 = 250, ew1 = 93, eh2 = 15;
+//O VARIABLES
+var a = 600,b = 260,c =135,d = 145;
+var e = 600,f = 260,g = 75,h = 97;
+//H VARIABLES
+var hx = 118,hy = 145,hw = 145,hh = 180;
+var hx1 = 147,hy1 = 145,hw1 = 86,hh1 = 70;
+var hx2 = 147, hy2 = 245, hw2 = 86, hh2 = 80;
+//L
+var lx = 428, ly = 145, lw = 85, lh = 182;
+var lx1 = 459, ly1 = 145, lw1 = 30, lh1 = 180;
+// HELLO VARIABLES <END HERE>
+
+function setup() {
+  createCanvas(800, 500);
+   background('#3c99dc');
+  fill('white')
+   drawingContext.setLineDash([5, 20]);
+  textFont("Arial",250);
+let words = ['Hello'];
+let word = random(words); // select random word
+  text(word, 100, 325);// draw the word
+  strokeWeight(5)
+  
+//HELLO LINES AND REFERENCE SHAPES <START HERE>
+  //FOR H
+  //rect(hx,hy,hw,hh)
+  //rect(147,145,86,70) 
+  //rect(147,245,86,78)
+line(131,155,131,310);
+line(250,155,250,310);
+line(150,230,250,230)
+  //FOR L
+  //rect(lx,ly,lw,lh);
+//rect(lx1,ly1,lw1,lh1);
+line(446,155,446,310);
+line(503,155,503,310);
+ 
+  //FOR O 
+  //ellipse(a,b,c,d)
+  //ellipse(e,f,g,h)
+  noFill()
+  ellipse(a,b,100,120)
+//FOR E
+  //ellipse(ea,eb,ec,ed)
+  //ellipse(ee1,ef1,eg1,eh1)
+  //rect(ex,ey,ew,eh)
+  //rect(ex1,ey1,ew1,eh1)
+  ellipse(ea,eb,100,120)
+  line(310,257,393,257)
+ //HELLO LINES AND REFERENCE SHAPES <END HERE> 
+  
+}
+
+function draw() {
+ //TRACING FUNCTIONS 
+  stroke('red');
+  strokeWeight(12)
+  if(mouseIsPressed === true){
+  
+    //HELLO CONDITIONS <START HERE>  
+    //FOR H
+    if(mouseX >= hx && mouseX <= hx + hw && mouseY >= hy && mouseY <= hy + hh)
+       {
+    if((mouseX >= hx1 && mouseX <= hx1 + hw1 && mouseY >= hy1 && mouseY <= hy1 + hh1) || (mouseX >= hx2 && mouseX <= hx2 + hw2 && mouseY >= hy2 && mouseY <= hy2 + hh2) )
+    {
+      stroke('red')
+    }
+         else{
+           stroke('green')
+         }
+    }
+  //FOR L 
+    if(mouseX >= lx && mouseX <= lx + lw && mouseY >= ly && mouseY <= ly + lh)
+   {
+     if(mouseX >= lx1 && mouseX <= lx1 + lw1 && mouseY >= ly1 && mouseY <= ly1 + lh1)
+     {
+      stroke('red') 
+     }
+     else{
+       stroke('green')
+     }
+   } 
+  //FOR O
+if(dist(a,b + sqrt((d/2)*(d/2) - (c/2)*(c/2)),mouseX, mouseY) + dist(a,b-sqrt((d/2)*(d/2) - (c/2)*(c/2)),mouseX,mouseY) <= d){
+      if(dist(e,f + sqrt((h/2)*(h/2) - (g/2)*(g/2)),mouseX, mouseY) + dist(e,f-sqrt((h/2)*(h/2) - (g/2)*(g/2)),mouseX,mouseY) <= h){
+        stroke('red');
+      }
+    else{
+      stroke('green');
+    }
+    }
+    
+      if(dist(ea,eb + sqrt((ed/2)*(ed/2) - (ec/2)*(ec/2)),mouseX, mouseY) + dist(ea,eb-sqrt((ed/2)*(ed/2) - (ec/2)*(ec/2)),mouseX,mouseY) <= ed){
+              if((dist(ee1,ef1 + sqrt((eh1/2)*(eh1/2) - (eg1/2)*(eg1/2)),mouseX, mouseY) + dist(ee1,ef1-sqrt((eh1/2)*(eh1/2) - (eg1/2)*(eg1/2)),mouseX,mouseY) <= eh1) || (mouseX > ex && mouseX < ex + ew && mouseY > ey && mouseY < ey + eh)){
+              
+         if(mouseX >= ex1 && mouseX <= ex1 + ew1 && mouseY >= ey1 && mouseY <= ey1 + eh2) {
+           stroke('green')
+           
+         }
+                else{
+                  stroke('red')
+                }
+              }
+         else{
+           stroke('green')
+         }
+       
+       }
+//HELLO CONDITIONS <END HERE>
+    
+      line(mouseX,mouseY,pmouseX,pmouseY);
+     }
+  
+
+  
+}
+    </script>
+    
+  </body>
+</html>
