@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
+}
+
+.top {
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  text-align: center;
+  font-size: 35px;
+  line-height:60px;
+  border: 3px solid black;
+}
+
+.bottom {
+  display: grid;
+  justify-content: center;
+  align-content: center; 
+  grid-template-columns: repeat(3,115px);
+  grid-gap: 170px;
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  border: 3px solid black;
+}
+
+.back,.menu,.next {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  font-size: 20px;
+  background: violet;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 10px 25px;
+}
+
+.back:hover,.menu:hover,.next:hover {
+  background: purple;
+}
+</style>
+
+  </head>
+  <body>
+    <main>
+      <div class="top">Tracing Game</div>
+    </main>
+      <canvas id="myCanvas"></canvas>
+    <div class="bottom">
+      <a class="back" href="Game2-1.html">Back</a>
+      <a class="menu" href="index.html">Menu</a> 
+      <a class="next" href="Game2-3.html">Next</a>
+   </div>
+    
+    <script src="sketch.js"></script>
+    
+    <script>
+      var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+//O1 VARIABLES
+var a = 350,b = 260,c =126,d = 143;
+var e = 350,f = 260,g = 75,h = 97;
+//O2 VARIABLES
+var a2 = 490,b2 = 260,c2 =126,d2 = 143;
+var e2 = 490,f2 = 260,g2 = 75,h2 = 97;
+//L VARIABLES
+var x=570,y=142,w=30,h1=185;
+//C VARIABLES
+var ca = 195,cb = 235,cc =170,cd = 195;
+var ce = 195,cf = 234,cg = 110,ch = 135;
+var cx =245,cy=205,cw = 35,ch1 = 53;
+function setup() {
+  createCanvas(800, 500);
+   background('#3c99dc');
+  fill('white');
+   drawingContext.setLineDash([5, 20]);
+  textFont("Arial",250);
+let words = ['Cool'];
+let word = random(words); // select random word
+  text(word, 100, 325);// draw the word
+  strokeWeight(5);
+  
+  //O1 REFERENCE SHAPES
+  noFill();
+  //ellipse(a,b,c,d);
+  //ellipse(e,f,g,h);
+  ellipse(a,b,c-23,d-20);
+  
+  //O2 REFERENCE SHAPES
+  //ellipse(a2,b2,c2,d2);
+  //ellipse(e2,f2,g2,h2);
+  ellipse(a2,b2,c2-23,d2-20);
+  
+  //L REFERENCE SHAPES
+  //rect(x,y,w,h1);
+  line(585,155,585,325);
+  
+  //C REFERENCE SHAPES
+  //ellipse(ce,cf,cg,ch);
+  //ellipse(ca,cb,cc,cd);
+  //rect(cx,cy,cw,ch);
+  arc(ca, cb, 140, 170, -100,PI + 2.5, OPEN);
+
+
+}
+
+function draw() {
+//TRACING FUNCTIONS 
+  stroke('red');
+  strokeWeight(10);
+  //O1
+  if(mouseIsPressed === true){
+  //FOR C     
+  if(dist(ca,cb + sqrt(2281.25),mouseX, mouseY) + dist(ca,cb-sqrt(2281.25),mouseX,mouseY) <= cd){
+      if((dist(ce,cf + sqrt(1531.25),mouseX, mouseY) + dist(ce,cf-sqrt(1531.25),mouseX,mouseY) <= ch) || mouseX >= cx && mouseX <= cx + cw && mouseY >= cy && mouseY <= cy + ch1){
+        stroke('red');
+      }
+    else{
+      stroke('green');
+    }
+    
+  }  
+    
+ //FOR O1 
+    if(dist(a,b + sqrt((d/2)*(d/2) - (c/2)*(c/2)),mouseX, mouseY) + dist(a,b-sqrt((d/2)*(d/2) - (c/2)*(c/2)),mouseX,mouseY) <= d){
+      if(dist(e,f + sqrt((h/2)*(h/2) - (g/2)*(g/2)),mouseX, mouseY) + dist(e,f-sqrt((h/2)*(h/2) - (g/2)*(g/2)),mouseX,mouseY) <= h){
+        stroke('red');
+      }
+    else{
+      stroke('green');
+    }
+    } 
+    //FOR O2
+if(dist(a2,b2 + sqrt((d2/2)*(d2/2) - (c2/2)*(c2/2)),mouseX, mouseY) + dist(a2,b2-sqrt((d2/2)*(d2/2) - (c2/2)*(c2/2)),mouseX,mouseY) <= d2){
+      if(dist(e2,f2 + sqrt((h2/2)*(h2/2) - (g2/2)*(g2/2)),mouseX, mouseY) + dist(e2,f2-sqrt((h2/2)*(h2/2) - (g2/2)*(g2/2)),mouseX,mouseY) <= h2){
+        stroke('red');
+      }
+    else{
+      stroke('green');
+    }
+    
+  } 
+    
+  //L
+    if(mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h1)
+   {
+   stroke('green');
+   }
+  
+    line(mouseX,mouseY,pmouseX,pmouseY);
+  }
+}
+    </script>
+    
+  </body>
+</html>
