@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
+}
+
+.top {
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  text-align: center;
+  font-size: 35px;
+  line-height:60px;
+  border: 3px solid black;
+}
+
+.bottom {
+  display: grid;
+  justify-content: center;
+  align-content: center; 
+  grid-template-columns: repeat(3,115px);
+  grid-gap: 170px;
+  width: 800px;
+  height: 60px;
+  background-color: blue;
+  border: 3px solid black;
+}
+
+.back,.menu {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  font-family: 'Russo One', sans-serif;
+  font-weight: normal;
+  font-size: 20px;
+  background: violet;
+  border: 3px solid black;
+  border-radius: 5px;
+  padding: 10px 25px;
+}
+
+.back:hover,.menu:hover {
+  background: purple;
+}
+</style>
+
+  </head>
+  <body>
+    <main>
+      <div class="top">Tracing Game</div>
+    </main>
+      <canvas id="myCanvas"></canvas>
+    <div class="bottom">
+      <a class="back" href="Game2-2.html">Back</a>
+      <a class="menu" href="index.html">Menu</a> 
+      <div></div>
+   </div>
+    
+    <script src="sketch.js"></script>
+    
+    <script>
+      var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+//E VARIABLES
+var ea = 544,eb = 260,ec =130,ed = 147;
+var ee1 = 544,ef1 = 260,eg1 = 75,eh1 = 97;
+var ex1 = 507, ey1 = 250, ew1 = 93, eh2 = 15;
+var ex = 513, ey = 267, ew = 93, eh = 15;
+
+//L VARIABLES
+var lx = 153, ly= 143,lw = 122,lh =182;
+var lx1 = 187, ly1= 143,lw1 = 90,lh1 =157;
+
+//I VARIABLES
+var ix = 292,iy=142,iw=30,ih=187;
+var ix1 = 292,iy1=175,iw1=30,ih1=16;
+//N VARIABLES
+var nx1=346,ny1=190,nw1=115,nh1=140;
+var nx2 = 379,ny2 = 250,nw2 = 50,nh2 = 80;
+var na = 405,nb = 250,nc = 52,nd = 70;
+var x1 = 460,y1 = 190,x2 = 460,y2 = 210,x3 = 440,y3 = 195;
+function setup() {
+  createCanvas(800, 500);
+background('#3c99dc');
+  fill('white');
+   drawingContext.setLineDash([5, 20]);
+  textFont("Arial",250);
+let words = ['Line'];
+let word = random(words); // select random word
+  text(word, 140, 325);// draw the word
+  strokeWeight(5);
+
+//N REFERENCE SHAPES
+  //rect(nx1,ny1,nw1,nh1);
+  //rect(nx2,ny2,nw2,nh2);
+  //ellipse(na, nb, nc, nd);
+  //triangle(x1,y1,x2,y2,x3,y3);
+  line(360,197,360,325);
+  line(445,215,445,325);
+  noFill();
+  arc(410, 240, 80, 80, (5*PI)/4,(7*PI)/4, OPEN);
+  
+  
+  //L REFERENCE SHAPES
+  //rect(153,143,122,182);
+  //rect(187,143,90,157)
+  line(170,155,170,320);
+line(170,315,250,315);
+  
+//I REFERENCE SHAPES
+  //rect(ix,iy,iw,ih);
+  //rect(ix1,iy1,iw1,ih1);
+  line(307,200,307,320);
+  line(307,155,307,160);
+  
+//E REFERENCE SHAPES
+  //ellipse(ea,eb,ec,ed)
+  //ellipse(ee1,ef1,eg1,eh1)
+  //rect(ex,ey,ew,eh)
+  //rect(ex1,ey1,ew1,eh2)
+  noFill();
+  ellipse(ea,eb,100,120)
+  line(500,257,600,257)
+  
+}
+
+function draw() {
+  stroke('red');
+  strokeWeight(10);
+  if(mouseIsPressed === true){
+ //FOR N
+    if(mouseX >= nx1 && mouseX <= nx1 + nw1 && mouseY >= ny1 && mouseY <= ny1 + nh1){
+        if((mouseX >= nx2 && mouseX <= nx2 + nw2 && mouseY >= ny2 && mouseY <= ny2 + nh2) ||(dist(na,nb + sqrt((nd/2)*(nd/2) - (nc/2)*(nc/2)),mouseX, mouseY) + dist(na,nb-sqrt((nd/2)*(nd/2) - (nc/2)*(nc/2)),mouseX,mouseY) <= nd) || mouseInTriangle(x1, y1, x2, y2, x3, y3)){
+    stroke('red')
+    }
+      else{
+        stroke('green')
+      }
+    }
+    
+    //FOR L 
+    if(mouseX >= lx && mouseX <= lx + lw && mouseY >= ly && mouseY <= ly + lh)
+   {
+     if(mouseX >= lx1 && mouseX <= lx1 + lw1 && mouseY >= ly1 && mouseY <= ly1 + lh1)
+     {
+      stroke('red'); 
+     }
+     else{
+       stroke('green');
+     }
+   }
+//FOR I
+    if(mouseX >= ix && mouseX <= ix + iw && mouseY >= iy && mouseY <= iy + ih)
+   {
+     if(mouseX >= ix1 && mouseX <= ix1 + iw1 && mouseY >= iy1 && mouseY <= iy1 + ih1)
+     {
+      stroke('red'); 
+     }
+     else{
+       stroke('green');
+     }
+   }  
+  //FOR E     
+    if(dist(ea,eb + sqrt((ed/2)*(ed/2) - (ec/2)*(ec/2)),mouseX, mouseY) + dist(ea,eb-sqrt((ed/2)*(ed/2) - (ec/2)*(ec/2)),mouseX,mouseY) <= ed){
+              if((dist(ee1,ef1 + sqrt((eh1/2)*(eh1/2) - (eg1/2)*(eg1/2)),mouseX, mouseY) + dist(ee1,ef1-sqrt((eh1/2)*(eh1/2) - (eg1/2)*(eg1/2)),mouseX,mouseY) <= eh1) || (mouseX > ex && mouseX < ex + ew && mouseY > ey && mouseY < ey + eh)){
+              
+         if(mouseX >= ex1 && mouseX <= ex1 + ew1 && mouseY >= ey1 && mouseY <= ey1 + eh2) {
+           stroke('green');
+           
+         }
+                else{
+                  stroke('red');
+                }
+              }
+         else{
+           stroke('green');
+         }
+       
+       }   
+    
+    line(mouseX,mouseY,pmouseX,pmouseY);
+  }
+
+}
+//TRIANGLE FOR N FUNCTION
+function Area(i, j, k) {
+    return abs((i[0]*(j[1]-k[1]) + j[0]*(k[1]-i[1])+ k[0]*(i[1]-j[1]))/2);
+}
+
+function mouseInTriangle(x1, y1, x2, y2, x3, y3){
+    let point = [mouseX, mouseY];
+    let area = Area([x1, y1], [x2, y2], [x3, y3]);
+    let area1 = Area([x1, y1], [x2, y2], point);
+    let area2 = Area(point, [x2, y2], [x3, y3]);
+    let area3 = Area([x1, y1], point, [x3, y3]);
+    return abs(area1 + area2 + area3 - area) < 0.001;
+}
+    </script>
+    
+  </body>
+</html>
